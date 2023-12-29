@@ -6,9 +6,7 @@ async function getAllSkills() {
 }
 
 async function createSkills(label, category, priority) {
-    const newSkill = {
-        label, category, priority
-    }
+    const data = await createSkillDB()
     return data
 }
 
