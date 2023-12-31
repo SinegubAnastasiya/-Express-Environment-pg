@@ -32,4 +32,15 @@ route.post('/', async (req, res) => {
     }
 })
 
+route.put('/', async (req, res) => {
+    try {
+        const { id } = req.params
+        const { label, category, priority } = req.body
+        const data = await updateSkill(id, label, category, priority)
+        res.status(200).send(data)
+    } catch (error) {
+        res.status(404).send(error.message)
+    }
+})
+
 module.exports = route
