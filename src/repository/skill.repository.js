@@ -16,4 +16,12 @@ async function createSkillDB(label, category, priority) {
     return rows
 }
 
-module.exports = { getAllSkillDB, createSkillDB }
+async function getSkillByIdDB(id) {
+    const client = await pool.connect()
+    const sql = 'SELECT * FROM environment WHERE id = { id }'
+    const { rows } = await client.query(sql, id)
+
+    return rows
+}
+
+module.exports = { getAllSkillDB, createSkillDB, getSkillByIdDB }
