@@ -11,7 +11,7 @@ const pool = require('../db')
 async function getAllSkillDB() {
     const connection = await pool.getConnection()
     const sql = 'SELECT * FROM environment'
-    const data = (await connection.query(sql)).rows
+    const [data] = await connection.query(sql)
 
     return data
 }
@@ -26,18 +26,48 @@ async function getAllSkillDB() {
 
 async function createSkillDB(label, category, priority) {
     const connection = await pool.getConnection()
-    const sql = 'INSERT INTO environment(label, category, priority) VALUES($1, $2, $3) RETURNING *'
-    const { rows } = await connection.query(sql, [label, category, priority])
+    const sql = 'INSERT INTO environment(label, category, priority) VALUES(?, ?, ?) '
+    await connection.query(sql, [label, category, priority])
+    const sql2 = 'SELECT * FROM environment'
+    const [data] = await connection.query(sql2)
+    return data
+}
 
-    return rows
+async function updateSkillDB(id, label, category, priority) {
+    const connection = await pool.getConnection()
+    const sql = 'UPDATE environment SET label = ?, category = ?, priority = ? WHERE id = ?'
+    const data = await connection.query(sql, [label, category, priority, id])
+
+    return data
+}
+
+async function updateBodyDB(id, body) {
+    const connection = await pool.getConnection()
+    const sql1 = 'SELECT * FROM environment WHERE id = ?'
+    const [rows] = await connection.query(sql1, [id])
+
+    const newSkillObj = { ...rows[0], ...body }
+
+    const sql = 'UPDATE environment SET label = ?, category = ?, priority = ? WHERE id = ?'
+    const [data] = await connection.query(sql, [newSkillObj.label, newSkillObj.category, newSkillObj.priority, id])
+
+    return data
+}
+
+async function deleteSkillDB(id) {
+    const connection = await pool.getConnection()
+    const sql = 'DELETE FROM environment WHERE id = ?'
+    const [data] = await connection.query(sql, [id])
+
+    return data
 }
 
 async function getSkillByIdDB(id) {
-    const client = await pool.connect()
-    const sql = 'SELECT * FROM environment WHERE id = { id }'
-    const { rows } = await client.query(sql, id)
+    const connection = await pool.getConnection()
+    const sql = 'SELECT * FROM environment WHERE id = ?'
+    const data = await connection.query(sql, id)
 
-    return rows
+    return data
 }
 
-module.exports = { getAllSkillDB, createSkillDB, getSkillByIdDB }
+module.exports = { getAllSkillDB, createSkillDB, getSkillByIdDB, updateSkillDB, deleteSkillDB, updateBodyDB }

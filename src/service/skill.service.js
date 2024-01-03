@@ -1,4 +1,4 @@
-const { getAllSkillDB, createSkillDB, getSkillByIdDB, updateSkillsDB, deleteSkillsDB } = require('../repository/skill.repository')
+const { getAllSkillDB, createSkillDB, getSkillByIdDB, updateSkillDB, deleteSkillDB, updateBodyDB } = require('../repository/skill.repository')
 
 async function getAllSkills() {
     const data = await getAllSkillDB()
@@ -15,13 +15,19 @@ async function getSkillById(id) {
     return data
 }
 
-async function updateSkillsDB(label, category, priority) {
-    const data = await createSkillDB()
-    return data
-}
-async function deleteSkillsDB(label, category, priority) {
-    const data = await createSkillDB()
+async function updateSkill(id, label, category, priority) {
+    const data = await updateSkillDB(id, label, category, priority)
     return data
 }
 
-module.exports = { getAllSkills, createSkills }
+async function deleteSkillById(id) {
+    const data = await deleteSkillDB(id)
+    return data
+}
+
+async function updateBody(id, body) {
+    const data = await updateBodyDB(id, body)
+    return data
+}
+
+module.exports = { getAllSkills, createSkills, updateSkill, getSkillById, deleteSkillById, updateBody }
