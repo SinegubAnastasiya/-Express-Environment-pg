@@ -1,6 +1,6 @@
 const express = require('express')
 const { getAllSkills, createSkills, getSkillById, updateSkill, deleteSkillById, updateBody } = require('../service/skill.service')
-
+const { isValidSkill, isValidId } = require('../helper/validation')
 const route = express.Router()
 
 route.get('/', async (req, res) => {
@@ -12,7 +12,7 @@ route.get('/', async (req, res) => {
     }
 })
 
-route.get('/:id', async (req, res) => {
+route.get('/:id', isValidId, async (req, res) => {
     try {
         const { id } = req.params
         const data = await getSkillById(id)
@@ -22,7 +22,7 @@ route.get('/:id', async (req, res) => {
     }
 })
 
-route.post('/', async (req, res) => {
+route.post('/', isValidSkill, async (req, res) => {
     try {
         const { label, category, priority } = req.body
         const data = await createSkills(label, category, priority)
@@ -32,7 +32,7 @@ route.post('/', async (req, res) => {
     }
 })
 
-route.put('/:id', async (req, res) => {
+route.put('/:id', isValidId, isValidSkill, async (req, res) => {
     try {
         const { id } = req.params
         const { label, category, priority } = req.body
@@ -43,7 +43,7 @@ route.put('/:id', async (req, res) => {
     }
 })
 
-route.delete('/:id', async (req, res) => {
+route.delete('/:id', isValidId, async (req, res) => {
     try {
         const { id } = req.params
         const data = await deleteSkillById(id)
@@ -53,7 +53,7 @@ route.delete('/:id', async (req, res) => {
     }
 })
 
-route.patch('/:id', async (req, res) => {
+route.patch('/:id', isValidId, async (req, res) => {
     try {
         const { id } = req.params
         const body = req.body
