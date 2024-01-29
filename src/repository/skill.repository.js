@@ -13,7 +13,7 @@ async function createSkillDB(label, category, priority) {
     const sql = 'INSERT INTO environment(label, category, priority) VALUES($1, $2, $3) RETURNING *'
     const { rows } = await client.query(sql, [label, category, priority])
 
-    return data
+    return rows
 }
 
 module.exports = { getAllSkillDB, createSkillDB }
